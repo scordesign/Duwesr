@@ -22,7 +22,7 @@
  @if ($user->id == $productos->id_usu)
     
     <tr>
-        <td></td>
+        
         <td>{{ $productos->nombre }}</td>
 </tr>
  @endif  
@@ -35,7 +35,7 @@
  @if ($user->id == $muni->id_usu)
     
     <tr>
-        <td></td>
+       
         <td>{{ $muni->desc }}</td>
 </tr>
  @endif  

@@ -1,0 +1,4 @@
+[05-Jan-2024 15:07:10 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/duwestcolombia/duclient.duwestcolombia.com/config/cache.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/duwestcolombia/duclient.duwestcolombia.com/config/cache.php on line 18
