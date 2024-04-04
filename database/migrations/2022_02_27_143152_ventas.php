@@ -13,8 +13,8 @@ class Ventas extends Migration
      */
     public function up()
     {
-        // 
-          Schema::create('ventas', function (Blueprint $table) {
+        //
+        Schema::create('ventas', function (Blueprint $table) {
             $table->engine="InnoDB";
             $table->bigIncrements('id');
             $table->string('desc');
