@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Zonas extends Migration
+class Ventas extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class Zonas extends Migration
      */
     public function up()
     {
-        Schema::create('zonas' , function (Blueprint $table) {
+        // 
+          Schema::create('ventas', function (Blueprint $table) {
             $table->engine="InnoDB";
             $table->bigIncrements('id');
             $table->string('desc');
             $table->bigInteger('id_usu')->unsigned();
             $table->timestamps();
             $table->foreign('id_usu')->references('id')->on('users')->onDelete('cascade');
-
         });
     }
 
