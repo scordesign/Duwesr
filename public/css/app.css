@@ -11285,23 +11285,4 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important;
   }
-  
-}
-.ventas img{
-  
-  width: 100%;
-}
-.ventas{
-  position: relative;
-  float: left;
-  width: 40%;
-}
-
-.tieto img{
-  width: 100%;
-}
-.tieto{
-  position: relative;
-  float: right;
-  width: 40%;
 }

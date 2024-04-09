@@ -60,3 +60,7 @@ Route::get('ingredientesexport', function () {
 // Route::get('cero',App\Http\Controllers\CeroController::class)->middleware('auth');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
