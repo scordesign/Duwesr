@@ -67,6 +67,16 @@ class Venta extends Model
     {
         return $this->hasMany('App\Models\ProductosUsed', 'producto_venta_id', 'id');
     }
+
+   
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function zonasUseds()
+    {
+        return $this->hasMany('App\Models\Zonasused', 'zona_venta_id', 'id');
+    }
+
     
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
