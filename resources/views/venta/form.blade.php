@@ -43,7 +43,7 @@
 
     <div class="input-group mb-3">
   <div class="input-group-prepend">
-    <label class="input-group-text" for="inputGroupSelect01"><button type="button" class="btn btn-sm">seleccione cultivo</button>   </label>
+    <label class="input-group-text" for="inputGroupSelect01"><button type="button" class="btn btn-sm">Seleccione cultivo</button>   </label>
   </div>
   <select required class="form-select form-select-sm"  name="cultivos" id="">
         @foreach($cultivos as $cult)

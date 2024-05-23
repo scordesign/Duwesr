@@ -54,7 +54,7 @@
 @csrf
 <div class="input-group mb-3">
   <div class="input-group-prepend">
-    <span class="input-group-text" id="basic-addon1">municipios</span>
+    <span class="input-group-text" id="basic-addon1">Municipios</span>
   </div>
   <select class="form-control" name="id_muni" aria-label="multiple select example">
         @foreach($Municipios as $muni)
@@ -68,7 +68,41 @@
     <button class="btn btn-outline-success" type="submit">Agregar</button>
   </div>
 </div>
+<h3>Agregar Zonas</h3>
+@foreach($Municipiosusers as $muni)
+<div class="input-group mb-3">
+  <input disabled value="{{$muni->desc}}" type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+  <div class="input-group-append">
 
+    <form action="{{ route('Municipiosusers.destroy',$muni->id) }}" method="POST">
+        @csrf
+        @method('DELETE')
+        {{ Form::hidden('id', $user->id, ['class' => 'form-control' . ($errors->has('id') ? ' is-invalid' : ''), 'placeholder' => 'id']) }}
+        <button type="submit" class="btn btn-outline-danger"><i class="fa fa-fw fa-trash"></i>Eliminar</button>
+    </form>
+
+  </div>
+</div>
+    @endforeach
+
+<form action="{{ route('Municipiosusers.store') }}" method="POST">
+@csrf
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon1">Zonas</span>
+  </div>
+  <select class="form-control" name="id_muni" aria-label="multiple select example">
+        @foreach($Municipios as $muni)
+    <option value="{{$muni->id}}">{{$muni->desc}}</option>
+    @endforeach
+       
+</select>
+{{ Form::hidden('id', $user->id, ['class' => 'form-control' . ($errors->has('id') ? ' is-invalid' : ''), 'placeholder' => 'id']) }}
+
+<div class="input-group-append">
+    <button class="btn btn-outline-success" type="submit">Agregar</button>
+  </div>
+</div>
 </form>
 
 

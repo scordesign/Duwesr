@@ -4,6 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Zonasused;
 use App\Http\Requests\ZonasusedRequest;
+use App\Models\Productosused;
+use Illuminate\Http\Request;
+use App\Models\Producto as producto; 
+use App\Models\Cultivo as cultivo;
+use App\Models\BlancosbiologicosUsed as bbused; 
+use App\Models\CultivosUsed as culused;
+use App\Models\Venta as venta;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\VentaController as ventacontroler;
+use App\Models\Productosxuser as Productosxusers;
+ 
 
 /**
  * Class ZonasusedController
