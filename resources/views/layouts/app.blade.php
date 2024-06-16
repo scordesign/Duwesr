@@ -89,7 +89,18 @@
                                 </li> -->
 
 
-                    <li class="nav-item">
+
+ <li class="nav-item">
+
+                                    <a class="nav-link" href="{{ route('reportes.index') }}">
+
+                                    <img src="https://duclient.duwestcolombia.com/public/img/informe-de-negocio.png"style="height:5vh;
+                                    @media (max-width: 480px) { height:10vh; } ">    </br>  
+
+{{ __('Dashboard') }}</a>
+
+                                </li> 
+                                <li class="nav-item">
 
                                     <a class="nav-link" href="{{ route('reportes.index') }}">
 

@@ -7,8 +7,6 @@ use App\Models\Blancosbiologico as blancosbiologicos;
 use App\Models\Blancosbiologicosused as bbused; 
 use App\Models\Cultivosused as culused;
 use App\Models\Productosused as prodused;
-use App\Models\Zona as zona;
-use App\Models\Zonasused as zonaused;
 use App\Models\Venta as venta;
 use App\Models\Productosxuser as Productosxuser;
 
@@ -85,11 +83,7 @@ class VentaController extends Controller
         $cultivos = cultivo::select('id','cultivo')
         ->get();
 
-        // $productos = Productosxuser::join('productos', 'productosxusers.id_produc', '=', 'productos.id')->select('productos.nombre as nombre','productos.id  as id')->where("id_usu",$idusu)->get();
-        $productos = producto::select('*')->get();
-        $zona = zona::select('*')->get();
-
-
+        $productos = Productosxuser::join('productos', 'productosxusers.id_produc', '=', 'productos.id')->select('productos.nombre as nombre','productos.id  as id')->where("id_usu",$idusu)->get();
 
 
 

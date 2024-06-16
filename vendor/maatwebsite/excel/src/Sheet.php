@@ -5,7 +5,6 @@ namespace Maatwebsite\Excel;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\LazyCollection;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromGenerator;
@@ -193,6 +192,10 @@ class Sheet
         if ($sheetExport instanceof WithCharts) {
             $this->addCharts($sheetExport->charts());
         }
+
+        if ($sheetExport instanceof WithDrawings) {
+            $this->addDrawings($sheetExport->drawings());
+        }
     }
 
     /**
@@ -250,6 +253,7 @@ class Sheet
 
         $calculatesFormulas = $import instanceof WithCalculatedFormulas;
         $formatData         = $import instanceof WithFormatData;
+        $endColumn          = $import instanceof WithColumnLimit ? $import->endColumn() : null;
 
         if ($import instanceof WithMappedCells) {
             app(MappedReader::class)->map($import, $this->worksheet);
@@ -292,11 +296,9 @@ class Sheet
                     $sheetRow->setPreparationCallback($preparationCallback);
                 }
 
-                $rowArray                    = $sheetRow->toArray(null, $import instanceof WithCalculatedFormulas, $import instanceof WithFormatData, $endColumn);
-                $rowIsEmptyAccordingToImport = $import instanceof SkipsEmptyRows && method_exists($import, 'isEmptyWhen') && $import->isEmptyWhen($rowArray);
-                if (!$import instanceof SkipsEmptyRows || ($import instanceof SkipsEmptyRows && (!$rowIsEmptyAccordingToImport && !$sheetRow->isEmpty($calculatesFormulas)))) {
+                if (!$import instanceof SkipsEmptyRows || ($import instanceof SkipsEmptyRows && !$sheetRow->isEmpty($calculatesFormulas))) {
                     if ($import instanceof WithValidation) {
-                        $toValidate = [$sheetRow->getIndex() => $rowArray];
+                        $toValidate = [$sheetRow->getIndex() => $sheetRow->toArray(null, $import instanceof WithCalculatedFormulas, $import instanceof WithFormatData, $endColumn)];
 
                         try {
                             app(RowValidator::class)->validate($toValidate, $import);
@@ -350,10 +352,6 @@ class Sheet
 
             $row = $row->toArray($nullValue, $calculateFormulas, $formatData, $endColumn);
 
-            if ($import && method_exists($import, 'isEmptyWhen') && $import->isEmptyWhen($row)) {
-                continue;
-            }
-
             if ($import instanceof WithMapping) {
                 $row = $import->map($row);
             }
@@ -396,10 +394,6 @@ class Sheet
      */
     public function close($sheetExport)
     {
-        if ($sheetExport instanceof WithDrawings) {
-            $this->addDrawings($sheetExport->drawings());
-        }
-
         $this->exportable = $sheetExport;
 
         if ($sheetExport instanceof WithColumnFormatting) {
@@ -465,34 +459,9 @@ class Sheet
      */
     public function fromQuery(FromQuery $sheetExport, Worksheet $worksheet)
     {
-        if ($sheetExport->query() instanceof \Laravel\Scout\Builder) {
-            $this->fromScout($sheetExport, $worksheet);
-
-            return;
-        }
-
         $sheetExport->query()->chunk($this->getChunkSize($sheetExport), function ($chunk) use ($sheetExport) {
             $this->appendRows($chunk, $sheetExport);
         });
-    }
-
-    /**
-     * @param  FromQuery  $sheetExport
-     * @param  Worksheet  $worksheet
-     */
-    public function fromScout(FromQuery $sheetExport, Worksheet $worksheet)
-    {
-        $scout     = $sheetExport->query();
-        $chunkSize = $this->getChunkSize($sheetExport);
-
-        $chunk = $scout->paginate($chunkSize);
-        // Append first page
-        $this->appendRows($chunk->items(), $sheetExport);
-
-        // Append rest of pages
-        for ($page = 2; $page <= $chunk->lastPage(); $page++) {
-            $this->appendRows($scout->paginate($chunkSize, 'page', $page)->items(), $sheetExport);
-        }
     }
 
     /**
@@ -516,13 +485,7 @@ class Sheet
      */
     public function fromIterator(FromIterator $sheetExport)
     {
-        $iterator = class_exists(LazyCollection::class) ? new LazyCollection(function () use ($sheetExport) {
-            foreach ($sheetExport->iterator() as $row) {
-                yield $row;
-            }
-        }) : $sheetExport->iterator();
-
-        $this->appendRows($iterator, $sheetExport);
+        $this->appendRows($sheetExport->iterator(), $sheetExport);
     }
 
     /**
@@ -530,13 +493,7 @@ class Sheet
      */
     public function fromGenerator(FromGenerator $sheetExport)
     {
-        $generator = class_exists(LazyCollection::class) ? new LazyCollection(function () use ($sheetExport) {
-            foreach ($sheetExport->generator() as $row) {
-                yield $row;
-            }
-        }) : $sheetExport->generator();
-
-        $this->appendRows($generator, $sheetExport);
+        $this->appendRows($sheetExport->generator(), $sheetExport);
     }
 
     /**
@@ -653,9 +610,7 @@ class Sheet
             $rows = $sheetExport->prepareRows($rows);
         }
 
-        $rows = $rows instanceof LazyCollection ? $rows : new Collection($rows);
-
-        $rows->flatMap(function ($row) use ($sheetExport) {
+        $rows = (new Collection($rows))->flatMap(function ($row) use ($sheetExport) {
             if ($sheetExport instanceof WithMapping) {
                 $row = $sheetExport->map($row);
             }
@@ -667,13 +622,13 @@ class Sheet
             return ArrayHelper::ensureMultipleRows(
                 static::mapArraybleRow($row)
             );
-        })->chunk(1000)->each(function ($rows) use ($sheetExport) {
-            $this->append(
-                $rows->toArray(),
-                $sheetExport instanceof WithCustomStartCell ? $sheetExport->startCell() : null,
-                $this->hasStrictNullComparison($sheetExport)
-            );
-        });
+        })->toArray();
+
+        $this->append(
+            $rows,
+            $sheetExport instanceof WithCustomStartCell ? $sheetExport->startCell() : null,
+            $this->hasStrictNullComparison($sheetExport)
+        );
     }
 
     /**
@@ -701,7 +656,7 @@ class Sheet
     }
 
     /**
-     * @param  $sheetImport
+     * @param $sheetImport
      * @return int
      */
     public function getStartRow($sheetImport): int

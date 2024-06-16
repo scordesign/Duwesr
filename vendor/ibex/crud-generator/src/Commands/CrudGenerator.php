@@ -25,7 +25,7 @@ class CrudGenerator extends GeneratorCommand
      *
      * @var string
      */
-    protected $description = 'Create bootstrap Laravel CRUD operations';
+    protected $description = 'Create bootstrap CRUD operations';
 
     /**
      * Execute the console command.
@@ -56,11 +56,6 @@ class CrudGenerator extends GeneratorCommand
             ->buildModel()
             ->buildViews();
 
-        $this->info('Please add route below:');
-
-        $this->info('');
-        $this->info("Route::resource('".$this->_getRoute()."', {$this->name}Controller::class);");
-        $this->info('');
         $this->info('Created Successfully.');
 
         return true;
@@ -117,17 +112,6 @@ class CrudGenerator extends GeneratorCommand
         );
 
         $this->write($modelPath, $modelTemplate);
-
-        // Make Request Class
-        $requestPath = $this->_getRequestPath($this->name);
-
-        $this->info('Creating Request Class ...');
-
-        $requestTemplate = str_replace(
-            array_keys($replace), array_values($replace), $this->getStub('Request')
-        );
-
-        $this->write($requestPath, $requestTemplate);
 
         return $this;
     }

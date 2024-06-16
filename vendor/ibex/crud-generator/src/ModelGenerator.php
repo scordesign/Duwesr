@@ -2,7 +2,7 @@
 
 namespace Ibex\CrudGenerator;
 
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -12,16 +12,16 @@ class ModelGenerator
 {
     private $functions = null;
 
-    private $table;
-    private $properties;
-    private $modelNamespace;
+    private $table = null;
+    private $properties = null;
+    private $modelNamespace = 'App';
 
     /**
      * ModelGenerator constructor.
      *
-     * @param  string  $table
-     * @param  string  $properties
-     * @param  string  $modelNamespace
+     * @param string $table
+     * @param string $properties
+     * @param string $modelNamespace
      */
     public function __construct(string $table, string $properties, string $modelNamespace)
     {
@@ -44,31 +44,97 @@ class ModelGenerator
     private function _init()
     {
         foreach ($this->_getTableRelations() as $relation) {
-            $this->functions .= $this->_getFunction($relation);
+            if ($relation->ref) {
+                $tableKeys = $this->_getTableKeys($relation->ref_table);
+                $eloquent = $this->_getEloquent($relation, $tableKeys);
+            } else {
+                $eloquent = 'hasOne';
+            }
+
+            $this->functions .= $this->_getFunction($eloquent, $relation->ref_table, $relation->foreign_key, $relation->local_key);
         }
     }
 
-    private function _getFunction(array $relation)
+    /**
+     * @param $relation
+     * @param $tableKeys
+     *
+     * @return string
+     */
+    private function _getEloquent($relation, $tableKeys)
     {
-        switch ($relation['name']) {
+        $eloquent = '';
+        foreach ($tableKeys as $tableKey) {
+            if ($relation->foreign_key == $tableKey->Column_name) {
+                $eloquent = 'hasMany';
+
+                if ($tableKey->Key_name == 'PRIMARY') {
+                    $eloquent = 'hasOne';
+                } elseif ($tableKey->Non_unique == 0 && $tableKey->Seq_in_index == 1) {
+                    $eloquent = 'hasOne';
+                }
+            }
+        }
+
+        return $eloquent;
+    }
+
+    /**
+     * @param string $relation
+     * @param string $table
+     * @param string $foreign_key
+     * @param string $local_key
+     *
+     * @return string
+     */
+    private function _getFunction(string $relation, string $table, string $foreign_key, string $local_key)
+    {
+        list($model, $relationName) = $this->_getModelName($table, $relation);
+        $relClass = ucfirst($relation);
+
+        switch ($relation) {
             case 'hasOne':
-            case 'belongsTo':
-                $this->properties .= "\n * @property {$relation['class']} \${$relation['relation_name']}";
+                $this->properties .= "\n * @property $model $$relationName";
                 break;
             case 'hasMany':
-                $this->properties .= "\n * @property ".$relation['class']."[] \${$relation['relation_name']}";
+                $this->properties .= "\n * @property ".$model."[] $$relationName";
                 break;
         }
 
         return '
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\\'.ucfirst($relation['name']).'
+     * @return \Illuminate\Database\Eloquent\Relations\\'.$relClass.'
      */
-    public function '.$relation['relation_name'].'()
+    public function '.$relationName.'()
     {
-        return $this->'.$relation['name'].'(\\'.$this->modelNamespace.'\\'.$relation['class'].'::class, \''.$relation['foreign_key'].'\', \''.$relation['owner_key'].'\');
+        return $this->'.$relation.'(\''.$this->modelNamespace.'\\'.$model.'\', \''.$foreign_key.'\', \''.$local_key.'\');
     }
     ';
+    }
+
+    /**
+     * Get the name relation and model.
+     *
+     * @param $name
+     * @param $relation
+     *
+     * @return array
+     */
+    private function _getModelName($name, $relation)
+    {
+        $class = Str::studly(Str::singular($name));
+        $relationName = '';
+
+        switch ($relation) {
+            case 'hasOne':
+                $relationName = Str::camel(Str::singular($name));
+                break;
+            case 'hasMany':
+                $relationName = Str::camel(Str::plural($name));
+                break;
+        }
+
+        return [$class, $relationName];
     }
 
     /**
@@ -78,83 +144,31 @@ class ModelGenerator
      */
     private function _getTableRelations()
     {
-        return [
-            ...$this->getBelongsTo(),
-            ...$this->getOtherRelations(),
-        ];
+        $db = DB::getDatabaseName();
+        $sql = <<<SQL
+SELECT TABLE_NAME ref_table, COLUMN_NAME foreign_key, REFERENCED_COLUMN_NAME local_key, '1' ref 
+  FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+  WHERE REFERENCED_TABLE_NAME = '$this->table' AND TABLE_SCHEMA = '$db'
+UNION
+SELECT REFERENCED_TABLE_NAME ref_table, REFERENCED_COLUMN_NAME foreign_key, COLUMN_NAME local_key, '0' ref 
+  FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+  WHERE TABLE_NAME = '$this->table' AND TABLE_SCHEMA = '$db' AND REFERENCED_TABLE_NAME IS NOT NULL 
+
+ORDER BY ref_table ASC
+SQL;
+
+        return DB::select($sql);
     }
 
-    protected function getBelongsTo()
+    /**
+     * Get all Keys from table.
+     *
+     * @param $table
+     *
+     * @return array
+     */
+    private function _getTableKeys($table)
     {
-        $relations = Schema::getForeignKeys($this->table);
-
-        $eloquent = [];
-
-        foreach ($relations as $relation) {
-            if (count($relation['foreign_columns']) != 1 || count($relation['columns']) != 1) {
-                continue;
-            }
-
-            $eloquent[] = [
-                'name' => 'belongsTo',
-                'relation_name' => Str::camel(Str::singular($relation['foreign_table'])),
-                'class' => Str::studly(Str::singular($relation['foreign_table'])),
-                'foreign_key' => $relation['columns'][0],
-                'owner_key' => $relation['foreign_columns'][0],
-            ];
-        }
-
-        return $eloquent;
-    }
-
-    protected function getOtherRelations()
-    {
-        $tables = Schema::getTableListing();
-        $eloquent = [];
-
-        foreach ($tables as $table) {
-            $relations = Schema::getForeignKeys($table);
-            $indexes = collect(Schema::getIndexes($table));
-
-            foreach ($relations as $relation) {
-                if ($relation['foreign_table'] != $this->table) {
-                    continue;
-                }
-
-                if (count($relation['foreign_columns']) != 1 || count($relation['columns']) != 1) {
-                    continue;
-                }
-
-                $isUniqueColumn = $this->getUniqueIndex($indexes, $relation['columns'][0]);
-
-                $eloquent[] = [
-                    'name' => $isUniqueColumn ? 'hasOne' : 'hasMany',
-                    'relation_name' => Str::camel($isUniqueColumn ? Str::singular($table) : Str::plural($table)),
-                    'class' => Str::studly(Str::singular($table)),
-                    'foreign_key' => $relation['foreign_columns'][0],
-                    'owner_key' => $relation['columns'][0],
-                ];
-            }
-        }
-
-        return $eloquent;
-    }
-
-    private function getUniqueIndex($indexes, $column)
-    {
-        $isUnique = false;
-
-        foreach ($indexes as $index) {
-            if (
-                (count($index['columns']) == 1)
-                && ($index['columns'][0] == $column)
-                && $index['unique']
-            ) {
-                $isUnique = true;
-                break;
-            }
-        }
-
-        return $isUnique;
+        return DB::select("SHOW KEYS FROM {$table}");
     }
 }

@@ -18,11 +18,6 @@ class Row implements ArrayAccess
     protected $headingRow = [];
 
     /**
-     * @var array
-     */
-    protected $headerIsGrouped = [];
-
-    /**
      * @var \Closure
      */
     protected $preparationCallback;
@@ -36,16 +31,6 @@ class Row implements ArrayAccess
      * @var array|null
      */
     protected $rowCache;
-
-    /**
-     * @var bool|null
-     */
-    protected $rowCacheFormatData;
-
-    /**
-     * @var string|null
-     */
-    protected $rowCacheEndColumn;
 
     /**
      * @param  SpreadsheetRow  $row
@@ -88,7 +73,7 @@ class Row implements ArrayAccess
      */
     public function toArray($nullValue = null, $calculateFormulas = false, $formatData = true, ?string $endColumn = null)
     {
-        if (is_array($this->rowCache) && ($this->rowCacheFormatData === $formatData) && ($this->rowCacheEndColumn === $endColumn)) {
+        if (is_array($this->rowCache)) {
             return $this->rowCache;
         }
 
@@ -115,9 +100,7 @@ class Row implements ArrayAccess
             $cells = ($this->preparationCallback)($cells, $this->row->getRowIndex());
         }
 
-        $this->rowCache           = $cells;
-        $this->rowCacheFormatData = $formatData;
-        $this->rowCacheEndColumn  = $endColumn;
+        $this->rowCache = $cells;
 
         return $cells;
     }
@@ -143,13 +126,13 @@ class Row implements ArrayAccess
     #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
-        return isset($this->toArray()[$offset]);
+        return isset(($this->toArray())[$offset]);
     }
 
     #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
-        return $this->toArray()[$offset];
+        return ($this->toArray())[$offset];
     }
 
     #[\ReturnTypeWillChange]

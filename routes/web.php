@@ -27,6 +27,7 @@ Auth::routes();
 Route::resource('productos', App\Http\Controllers\ProductoController::class)->middleware('auth');
 Route::resource('reportes', App\Http\Controllers\reporte::class)->middleware('auth');
 Route::resource('ventas', App\Http\Controllers\VentaController::class)->middleware('auth');
+Route::resource('dashboard', App\Http\Controllers\VentaController::class)->middleware('auth');
 Route::resource('municipios', App\Http\Controllers\MunicipioController::class)->middleware('auth');
 Route::resource('blancosbiologicos', App\Http\Controllers\BlancosbiologicoController::class)->middleware('auth');
 Route::resource('productosuseds', App\Http\Controllers\ProductosusedController::class)->middleware('auth');
@@ -58,9 +59,5 @@ Route::get('ingredientesexport', function () {
     return(new IngredientesExport)->download('Ingredientes.xlsx');
 });
 // Route::get('cero',App\Http\Controllers\CeroController::class)->middleware('auth');
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
