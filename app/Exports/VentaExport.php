@@ -14,6 +14,7 @@ use App\Models\Blancosbiologicostieto as Blancosbiologicostieto;
 use App\Http\Controllers\TietoController as TietoController;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\Exportable;
+use App\Models\Zonasuser as Zonasuser;
 //use Maatwebsite\Excel\Concerns\FromQuery;
 //use Maatwebsite\Excel\Concerns\Exportable;
 //class VentaExport implements FromQuery
@@ -30,6 +31,7 @@ class VentaExport implements FromView
     {
             return view('exports.venta', [
                 'Venta' => Venta::join('users', 'ventas.id_usu', '=', 'users.id')->join('productosuseds', 'ventas.id', '=', 'productosuseds.producto_venta_id')->join('cultivosuseds', 'productosuseds.id_prod_use','=', 'cultivosuseds.cultivo_prod_id')->join('blancosbiologicosuseds', 'cultivosuseds.id_cult_use', '=', 'blancosbiologicosuseds.blancobiologico_cultivo_id')->get()
+                ,'Zonasusers' => Venta::join('zonasusers', 'zonasusers.id_usu', '=', 'ventas.id_usu')->join('zonas', 'zonasusers.id_zon', '=', 'zonas.id')->select('zonas.desc as desc','zonasusers.id as id')->get()
                 ]);
     }
 }

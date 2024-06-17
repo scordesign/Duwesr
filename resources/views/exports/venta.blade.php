@@ -18,9 +18,8 @@
         <td><b>Nombre del blanco biologico</b></td>
         
       </tr>
+      <tr>
       @foreach($Zonasusers as $zon)
-
-    <tr>
         <td>{{ $zon->desc }}</td>
         @endforeach
 
