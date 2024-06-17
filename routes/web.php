@@ -28,6 +28,7 @@ Route::resource('productos', App\Http\Controllers\ProductoController::class)->mi
 Route::resource('reportes', App\Http\Controllers\reporte::class)->middleware('auth');
 Route::resource('ventas', App\Http\Controllers\VentaController::class)->middleware('auth');
 Route::resource('dashboard', App\Http\Controllers\VentaController::class)->middleware('auth');
+Route::resource('zonas', App\Http\Controllers\ZonaController::class)->middleware('auth');
 Route::resource('municipios', App\Http\Controllers\MunicipioController::class)->middleware('auth');
 Route::resource('blancosbiologicos', App\Http\Controllers\BlancosbiologicoController::class)->middleware('auth');
 Route::resource('productosuseds', App\Http\Controllers\ProductosusedController::class)->middleware('auth');
@@ -42,6 +43,7 @@ Route::resource('Blancosbiologicostietos', App\Http\Controllers\Blancosbiologico
 Route::resource('Ingredientesactivosuseds', App\Http\Controllers\IngredientesactivosusedController::class)->middleware('auth');
 Route::resource('users', App\Http\Controllers\UserController::class)->middleware('auth');
 Route::resource('Municipiosusers', App\Http\Controllers\MunicipiosuserController::class)->middleware('auth');
+Route::resource('Zonasusers', App\Http\Controllers\ZonasuserController::class)->middleware('auth');
 Route::resource('Productosxusers', App\Http\Controllers\ProductosxuserController::class)->middleware('auth');
 Route::resource('precios_ings', App\Http\Controllers\PreciosIngController::class)->middleware('auth');
 

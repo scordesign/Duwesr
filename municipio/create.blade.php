@@ -1,31 +1,30 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Actualizar Usuario
+    Create Municipio
 @endsection
 
 @section('content')
     <section class="content container-fluid">
-        <div class="">
+        <div class="row">
             <div class="col-md-12">
 
                 @includeif('partials.errors')
 
                 <div class="card card-default">
                     <div class="card-header">
-                        <span class="card-title">Actualizar Usuario</span>
+                        <span class="card-title">Crear Municipio</span>
                     </div>
                     <div class="card-body">
-                            {{ method_field('PATCH') }}
-                            
+                        <form method="POST" action="{{ route('municipios.store') }}"  role="form" enctype="multipart/form-data">
+                            @csrf
 
-                            @include('user.form')
+                            @include('municipio.form')
 
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-  
 @endsection

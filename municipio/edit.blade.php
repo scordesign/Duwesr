@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Actualizar Usuario
+    Actualizar Municipio
 @endsection
 
 @section('content')
@@ -13,19 +13,19 @@
 
                 <div class="card card-default">
                     <div class="card-header">
-                        <span class="card-title">Actualizar Usuario</span>
+                        <span class="card-title">Editar Municipio</span>
                     </div>
                     <div class="card-body">
+                        <form method="POST" action="{{ route('municipios.update', $municipio->id) }}"  role="form" enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
-                            
+                            @csrf
 
-                            @include('user.form')
+                            @include('municipio.form')
 
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-  
 @endsection

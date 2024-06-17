@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Municipio;
+use App\Models\Zona;
 use Illuminate\Http\Request;
 
 /**
  * Class MunicipioController
  * @package App\Http\Controllers
  */
-class MunicipioController extends Controller
+class ZonaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,10 +18,10 @@ class MunicipioController extends Controller
      */
     public function index()
     {
-        $municipios = Municipio::paginate();
+        $zonas = Zona::paginate();
 
-        return view('municipio.index', compact('municipios'))
-            ->with('i', (request()->input('page', 1) - 1) * $municipios->perPage());
+        return view('zona.index', compact('zonas'))
+            ->with('i', (request()->input('page', 1) - 1) * $zonas->perPage());
     }
 
     /**
@@ -31,8 +31,8 @@ class MunicipioController extends Controller
      */
     public function create()
     {
-        $municipio = new Municipio();
-        return view('municipio.create', compact('municipio'));
+        $zona = new Zona();
+        return view('zona.create', compact('zona'));
     }
 
     /**
@@ -43,12 +43,12 @@ class MunicipioController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate(Municipio::$rules);
+        request()->validate(Zona::$rules);
 
-        $municipio = Municipio::create($request->all());
+        $zona = Zona::create($request->all());
 
-        return redirect()->route('municipios.index')
-            ->with('success', 'Municipio creado exitosamente.');
+        return redirect()->route('zonas.index')
+            ->with('success', 'Zonas creada exitosamente.');
     }
 
     /**
@@ -59,9 +59,9 @@ class MunicipioController extends Controller
      */
     public function show($id)
     {
-        $municipio = Municipio::find($id);
+        $zona = Zona::find($id);
 
-        return view('municipio.show', compact('municipio'));
+        return view('zona.show', compact('zona'));
     }
 
     /**
@@ -72,26 +72,26 @@ class MunicipioController extends Controller
      */
     public function edit($id)
     {
-        $municipio = Municipio::find($id);
+        $zona = Zona::find($id);
 
-        return view('municipio.edit', compact('municipio'));
+        return view('zona.edit', compact('zona'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  Municipio $municipio
+     * @param  Zona $zona
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Municipio $municipio)
+    public function update(Request $request, Zona $zona)
     {
-        request()->validate(Municipio::$rules);
+        request()->validate(Zona::$rules);
 
-        $municipio->update($request->all());
+        $zona->update($request->all());
 
-        return redirect()->route('municipios.index')
-            ->with('success', 'Municipio updated successfully');
+        return redirect()->route('zonas.index')
+            ->with('success', 'Zona actualizada exitosamente');
     }
 
     /**
@@ -101,9 +101,9 @@ class MunicipioController extends Controller
      */
     public function destroy($id)
     {
-        $municipio = Municipio::find($id)->delete();
+        $zona = Zona::find($id)->delete();
 
-        return redirect()->route('municipios.index')
-            ->with('success', 'Municipio deleted successfully');
+        return redirect()->route('zonas.index')
+            ->with('success', 'Municipio eliminado exitosamente');
     }
 }

@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Municipio as Municipio;
 use App\Models\Municipiosuser as Municipiosuser;
+use App\Models\Zona as Zona;
+use App\Models\Zonasuser as Zonasuser;
 use App\Models\Producto as producto; 
 use App\Models\Productosxuser;
 use App\Models\PreciosIng;
@@ -38,9 +40,10 @@ class UserController extends Controller
     public function create()
     {
         $user = new User();
-        $Municipios = Municipio::select('id','desc')
-        ->get();
+        $Zonas = Zona::select('id','desc')->get();
+        $Municipios = Municipio::select('id','desc')->get();
         return view('user.create', compact('user','Municipios'));
+        return view('user.create', compact('user','Zonas'));
     }
 
     /**
@@ -88,16 +91,19 @@ class UserController extends Controller
         $Municipios = Municipio::select('id','desc')
         ->get();
 
+        $Zonas = Zona::select('id','desc')
+        ->get();
 
 
 
         $Municipiosusers = Municipiosuser::join('municipios', 'municipiosusers.id_muni', '=', 'municipios.id')->select('municipios.desc as desc','municipiosusers.id as id')->where("id_usu",$id)->get();
 
+        $Zonasusers = Zonasuser::join('zonas', 'zonasusers.id_zon', '=', 'zonas.id')->select('zonas.desc as desc','zonasusers.id as id')->where("id_usu",$id)->get();
 
         $productosxuser = Productosxuser::join('productos', 'productosxusers.id_produc', '=', 'productos.id')->select('productos.nombre as nombre','productosxusers.id   as id')->where("id_usu",$id)->get();
 
 
-        return view('user.edit', compact('user','productos','Municipios','Municipiosusers','productosxuser'));
+        return view('user.edit', compact('user','productos','Zonas','Zonasusers','Municipios','Municipiosusers','productosxuser'));
     }
 
     /**

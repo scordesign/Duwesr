@@ -88,7 +88,7 @@ Ingresa con tu usuario y crezcamos juntos.</h2>
 
   <!-- Copyright -->
   <div class="footer-copyright text-center py-3"style="position:absolute;bottom:2%;">2022 Copyright:
-    <a href="/"> ScorDesign.com</a>
+    <a href="www.scordesign.com"> ScorDesign.com</a>
   </div>
   <!-- Copyright -->
 

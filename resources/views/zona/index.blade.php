@@ -1,11 +1,10 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Usuario
+    Zona
 @endsection
 
 @section('content')
-@if (Auth::user()->rol=='admin')
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
@@ -14,12 +13,12 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Usuarios') }}
+                                {{ __('Zona') }}
                             </span>
 
                              <div class="float-right">
-                                <a href="{{ route('register') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Crear Nuevo') }}
+                                <a href="{{ route('zonas.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                  {{ __('Crear Nueva Zona') }}
                                 </a>
                               </div>
                         </div>
@@ -37,64 +36,38 @@
                                     <tr>
                                         <th>No</th>
                                         
-										<th>Nombre</th>
-										<th>Correo</th>
-										<th>Rol</th>
+										<th>Descripcion</th>
+										<th>Id Usu</th>
 
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($users as $user)
-                                    @if ($user->estatus == 1)
-                                    @if ($user->id != Auth::user()->id)
+                                    @foreach ($zonas as $zona)
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-											<td>{{ $user->name }}</td>
-											<td>{{ $user->email }}</td>
-											<td>{{ $user->rol }}</td>
+											<td>{{ $zona->desc }}</td>
+											<td>{{ $zona->id_usu }}</td>
 
                                             <td>
-                                                <form action="{{ route('users.destroy',$user->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('users.show',$user->id) }}"><i class="fa fa-fw fa-eye"></i> Mostrar</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('users.edit',$user->id) }}"><i class="fa fa-fw fa-edit"></i> Editar</a>
+                                                <form action="{{ route('zonas.destroy',$zona->id) }}" method="POST">
+                                                    <a class="btn btn-sm btn-primary " href="{{ route('zonas.show',$zona->id) }}"><i class="fa fa-fw fa-eye"></i> Mostrar</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('zonas.edit',$zona->id) }}"><i class="fa fa-fw fa-edit"></i> Editar</a>
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> Eliminar</button>
                                                 </form>
                                             </td>
                                         </tr>
-                                        @endif 
-                                     @endif   
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-                {!! $users->links() !!}
+                {!! $zonas->links() !!}
             </div>
         </div>
     </div>
-    @else
-    <div class="container">
-
-    <div class="row justify-content-center">
-
-        <div class="col-md-8">
-
-            <div class="card">
-
-                <div class="card-header">{{ __('no autorizado') }}</div>
-        <center>
-        <br><h3>Usuario no autorizado pongase en contacto con el administrador para obtener la autorizacion a este modulo </h3>
-        <br><a href="{{ url('/') }}"><button style="width:100%;" type="button" class="btn btn-secondary">Inicio</button></a><br>
-        </center>
-        </div>
-        </div>   
-    </div>
-        </div>
-    </div>
-    @endif
 @endsection

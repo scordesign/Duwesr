@@ -18,9 +18,14 @@
         <td><b>Nombre del blanco biologico</b></td>
         
       </tr>
-      @foreach($Venta as $ventas)
+      @foreach($Zonasusers as $zon)
+
     <tr>
-        <td>{{ $ventas->name }}</td>
+        <td>{{ $zon->desc }}</td>
+        @endforeach
+
+      @foreach($Venta as $ventas)
+
         <td>{{ $ventas->name }}</td>
         <td>{{ $ventas->desc }}</td>
         <td>{{ $ventas->desc_prod_use }}</td>
@@ -35,5 +40,6 @@
         
         
 @endforeach
+
 </tbody>
 </table>

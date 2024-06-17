@@ -104,7 +104,7 @@
 
                                     <a class="nav-link" href="{{ route('reportes.index') }}">
 
-                                    <img src="https://duclient.duwestcolombia.com/public/img/informe-de-negocio.png"style="height:5vh;
+                                    <img src="https://duclient.duwestcolombia.com/public/img/dash.png"style="height:5vh;
                                     @media (max-width: 480px) { height:10vh; } ">    </br>  
 
 {{ __('Informes') }}</a>
@@ -148,6 +148,16 @@
                                     @media (max-width: 480px) { height:10vh; } "> </br>     
 
                                     {{ __('Municipios') }}</a>
+
+                                </li>
+                                <li class="nav-item">
+
+                                    <a class="nav-link" href="{{ route('zonas.index') }}">
+
+                                    <img src="https://duclient.duwestcolombia.com/public/img/zona.png"style="height:5vh;
+                                    @media (max-width: 480px) { height:10vh; } "> </br>     
+
+                                    {{ __('Zonas') }}</a>
 
                                 </li>
 
