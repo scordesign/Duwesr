@@ -17,6 +17,10 @@ class reporte extends Controller
 {
      public function index()
     {
+<<<<<<< HEAD
+=======
+        
+>>>>>>> a854315ce519fd37164536efef9bcedbb4e7cbea
         return view('reportes.index');
     }
 }

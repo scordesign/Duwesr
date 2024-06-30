@@ -19,8 +19,15 @@
         <td><b>BLANCO BIOLOGICO</b></td>
         
       </tr>
+<<<<<<< HEAD
 
 
+=======
+      <tr>
+      @foreach($Zonasusers as $zon)
+        <td>{{ $zon->desc }}</td>
+        @endforeach
+>>>>>>> a854315ce519fd37164536efef9bcedbb4e7cbea
 
       @foreach($Venta as $ventas)
       <tr>  
