@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Reportes
+    Dashboard
 @endsection
 
 @section('content')
@@ -14,19 +14,17 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Reportes') }}
+                                {{ __('Dashboard') }}
                             </span>
 
                              <div class="card-header">
-                               Reportes Duwest Colombia
+                               Dashboard Ventas Duwest Colombia
                               </div>
                         </div>
                     </div>
                     </br></br>
-                     <a href="https://duclient.duwestcolombia.com/public/usersexport"class="btn btn-primary">Informe usuarios</a></br></br>
-                     <a href="https://duclient.duwestcolombia.com/public/ventasexport"class="btn btn-primary">Informe Venta / Cultivo</a></br></br>
-                      <a href="https://duclient.duwestcolombia.com/public/tietoexport"class="btn btn-primary">Informe Tieto</a></br></br>
-                      <a href="https://duclient.duwestcolombia.com/public/ingredientesexport"class="btn btn-primary">Informe Ingredientes Activos x Precio</a>
+                    <iframe title="PowerBiD" style="margin-left:0%;"width="100%" height="5800" src="https://app.powerbi.com/view?r=eyJrIjoiNTk4NDU4ZmUtZDZjZC00ODc3LWJiYWItOGQ3ZDZmNGFlNmNiIiwidCI6ImIwNTk2NjVlLWY4MzMtNDE3OC1iMjE1LWI1ODc5ZTJiOGI0OSJ9" frameborder="0" allowFullScreen="true"></iframe>
+                    
                         </div>
                     </div>
                 </div>

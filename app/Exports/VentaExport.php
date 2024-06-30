@@ -30,6 +30,11 @@ class VentaExport implements FromView
     {
             return view('exports.venta', [
                 'Venta' => Venta::join('users', 'ventas.id_usu', '=', 'users.id')->join('productosuseds', 'ventas.id', '=', 'productosuseds.producto_venta_id')->join('cultivosuseds', 'productosuseds.id_prod_use','=', 'cultivosuseds.cultivo_prod_id')->join('blancosbiologicosuseds', 'cultivosuseds.id_cult_use', '=', 'blancosbiologicosuseds.blancobiologico_cultivo_id')->get()
+                ,'Zonasusers' => Venta::join('zonasusers', 'ventas.id_usu', '=', 'zonasusers.id_usu')
+                    ->join('zonas', 'zonasusers.id_zon', '=', 'zonas.id')
+                    ->select('zonas.desc', 'zonasusers.id_usu')
+                    ->groupBy('zonas.desc', 'zonasusers.id_usu')
+                    ->get()
                 ]);
     }
 }

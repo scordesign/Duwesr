@@ -13,10 +13,10 @@ use App\Models\Productosxuser;
 use App\Models\PreciosIng;
 use App\Models\Ingredientesactivo;
 
-class reporte extends Controller
+class dashboard extends Controller
 {
      public function index()
     {
-        return view('reportes.index');
+        return view('dashboards.index');
     }
 }

@@ -6,27 +6,40 @@
     <tbody>
 
     
-    <tr>
-        <td><b>Zona</b></td>
-         <td><b>Usuario</b></td>
-       <td><b>Venta</b></td>
-       <td><b>Nombre del producto</b></td>
-       <td><b>Nombre cultivo usado</b></td>
-        <td><b>Participación</b></td>
-        <td><b>Dosis por hectarea en litros</b></td>
-        <td><b>Número de aplicaciones al año</b></td>
-        <td><b>Nombre del blanco biologico</b></td>
+    <tr style="backgroung-color:green;"> 
+        <td><b>ZONA</b></td>
+         <td><b>USUARIO</b></td>
+       <td><b>No DE VENTA</b></td>
+       <td><b>DESCRIPCION VENTA</b></td>
+       <td><b>NOMBRE DEL PRODUCTO</b></td>
+       <td><b>CULTIVO</b></td>
+        <td><b>PARTICIPACION</b></td>
+        <td><b>DOSIS POR HECTAREA</b></td>
+        <td><b>NUMERO DE APLICACIONES AL Año</b></td>
+        <td><b>BLANCO BIOLOGICO</b></td>
         
       </tr>
-      @foreach($Zonasusers as $zon)
 
-    <tr>
-        <td>{{ $zon->desc }}</td>
-        @endforeach
+
 
       @foreach($Venta as $ventas)
-
+      <tr>  
+        @php
+            $zona = '';
+        @endphp
+        @foreach($Zonasusers as $zon)
+            @php
+                if ($zon->id_usu == $ventas->id_usu) {
+                    $zona .= $zon->desc.', ';
+                }
+            @endphp
+        @endforeach
+        @php
+            $zona = substr($zona,0,strlen($zona) - 2 );
+        @endphp
+        <td>{{ $zona }}</td>
         <td>{{ $ventas->name }}</td>
+        <td>{{ $ventas->id }}</td>
         <td>{{ $ventas->desc }}</td>
         <td>{{ $ventas->desc_prod_use }}</td>
         <td>{{ $ventas->desc_cult_use }}</td>
@@ -35,11 +48,7 @@
         <td>{{ $ventas->aplicaciones }}</td>
         <td>{{ $ventas->desc_bb_use }}</td>
     </tr>
-   
-       
-        
-        
 @endforeach
-
+    
 </tbody>
 </table>

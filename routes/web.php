@@ -26,6 +26,7 @@ Route::get('/', function () {
 Auth::routes();
 Route::resource('productos', App\Http\Controllers\ProductoController::class)->middleware('auth');
 Route::resource('reportes', App\Http\Controllers\reporte::class)->middleware('auth');
+Route::resource('dashboards', App\Http\Controllers\dashboard::class)->middleware('auth');
 Route::resource('ventas', App\Http\Controllers\VentaController::class)->middleware('auth');
 Route::resource('dashboard', App\Http\Controllers\VentaController::class)->middleware('auth');
 Route::resource('zonas', App\Http\Controllers\ZonaController::class)->middleware('auth');
@@ -46,6 +47,7 @@ Route::resource('Municipiosusers', App\Http\Controllers\MunicipiosuserController
 Route::resource('Zonasusers', App\Http\Controllers\ZonasuserController::class)->middleware('auth');
 Route::resource('Productosxusers', App\Http\Controllers\ProductosxuserController::class)->middleware('auth');
 Route::resource('precios_ings', App\Http\Controllers\PreciosIngController::class)->middleware('auth');
+
 
 
 Route::get('usersexport', function () {

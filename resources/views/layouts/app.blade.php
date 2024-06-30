@@ -78,7 +78,7 @@
                     @if (Auth::user()->estatus==1)
                     @if (Auth::user()->rol=='admin')
 
-                    <ul class="navbar-nav me-auto">
+                    <ul class="navbar-nav me-auto"style="text-align:center;">
 
 
 
@@ -92,9 +92,9 @@
 
  <li class="nav-item">
 
-                                    <a class="nav-link" href="{{ route('reportes.index') }}">
+                                    <a class="nav-link" href="{{ route('dashboards.index') }}">
 
-                                    <img src="https://duclient.duwestcolombia.com/public/img/informe-de-negocio.png"style="height:5vh;
+                                    <img src="https://duclient.duwestcolombia.com/public/img/dash.png"style="height:5vh;
                                     @media (max-width: 480px) { height:10vh; } ">    </br>  
 
 {{ __('Dashboard') }}</a>
@@ -104,7 +104,7 @@
 
                                     <a class="nav-link" href="{{ route('reportes.index') }}">
 
-                                    <img src="https://duclient.duwestcolombia.com/public/img/dash.png"style="height:5vh;
+                                    <img src="https://duclient.duwestcolombia.com/public/img/informe-de-negocio.png"style="height:5vh;
                                     @media (max-width: 480px) { height:10vh; } ">    </br>  
 
 {{ __('Informes') }}</a>
@@ -233,7 +233,7 @@
                     @else 
 
                     <ul class="navbar-nav me-auto">
-<li class="nav-item">
+<!--<li class="nav-item">
 
                                   <a class="nav-link" href="">
 
@@ -242,7 +242,7 @@
                                     {{ __('Instructivo') }}</a>
 
                                 </li>
-                    <li class="nav-item">
+                    <li class="nav-item">-->
 
                                   
 
@@ -300,7 +300,8 @@
 
                                 <li class="nav-item">
 
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Ingresar') }}</a>
+                                    <a class="nav-link"style="background-color: #199319;
+                                    color:white;" href="{{ route('login') }}">{{ __('Ingresar') }}</a>
 
                                     <!-- <img src="https://duclient.duwestcolombia.com/public/img/adornar.png"style="width:50%;"> </br>     -->
 
